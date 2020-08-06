@@ -1,0 +1,3 @@
+trash0, Indictor2
+forward
+7.58706212044
