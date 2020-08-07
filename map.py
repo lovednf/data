@@ -11,6 +11,7 @@ path = os.getcwd()
 dirName = [dirnames for root,dirnames,filenames in os.walk(path)]
 subDirList = list(filter(lambda x: re.match(r'(\d+)', x) != None, dirName[0]))
 subdir = sorted(subDirList, key = lambda x:int(re.match(r'(\d+)', x).group()))
+subdir.append("26Landmark")
 print(subdir, "\n")
 
 
@@ -58,17 +59,17 @@ def main():
 
 		for j in range(len(coordinates) - 1):
 			if calDistance(coordinates[i + 1], coordinates[j]) < 5:
-				ImgListNow = ImgMatch.ReadSingleNode(path + "/" + subdir[i] + "/img/")
+				ImgListNow = ImgMatch.ReadSingleNode(path + "/" + subdir[i + 1] + "/img/")
 				ImgListBefore = ImgMatch.ReadSingleNode(path + "/" + subdir[j] + "/img/")
 				simiValue = ImgMatch.GetSimilarity(ImgListNow, ImgListBefore)
-				print(subdir[i], subdir[j], ":", simiValue)
+				print(subdir[i + 1], subdir[j], ":", simiValue)
 				if simiValue > 0.2:
 					coordinates[i + 1] = coordinates[j]
 					currX, currY = coordinates[j][0], coordinates[j][1]
 
 	print(coordinates)
-	# plt.plot([i[0] for i in coordinates], [i[1] for i in coordinates], "*-")
-	# plt.show()
+	plt.plot([i[0] for i in coordinates], [i[1] for i in coordinates], "*-")
+	plt.show()
 
 
 
