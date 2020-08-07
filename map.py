@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import ImgMatch
 import math
+import cv2
 
 
 path = os.getcwd()
@@ -38,7 +39,7 @@ def main():
 	currX, currY, currTheta = 0, 0, 0
 	distance = list(map(float, [i[2].strip("\n") for i in data]))
 	distance.append(0)
-	coordinates = []
+	coordinates = [[0, 0]]
 
 	for i in range(26):
 		if data[i][1] == "forward\n":
@@ -55,26 +56,22 @@ def main():
 		currX, currY = coord[0], coord[1]
 		coordinates.append([currX, currY])
 
-		if len(coordinates) > 1:
-			for j in range(len(coordinates) - 1):
-				if calDistance(coordinates[i], coordinates[j]) < 5:
-					ImgListNow = ImgMatch.ReadSingleNode(path + "/" + subdir[i] + "/img/")
-					ImgListBefore = ImgMatch.ReadSingleNode(path + "/" + subdir[j] + "/img/")
-					simiValue = ImgMatch.GetSimilarity(ImgListNow, ImgListBefore)
-					print(subdir[i], subdir[j], ":", simiValue)
-					if simiValue > 0.2:
-						coordinates[i] = coordinates[j]
-						currX, currY = coordinates[i][0], coordinates[i][1]
+		for j in range(len(coordinates) - 1):
+			if calDistance(coordinates[i + 1], coordinates[j]) < 5:
+				ImgListNow = ImgMatch.ReadSingleNode(path + "/" + subdir[i] + "/img/")
+				ImgListBefore = ImgMatch.ReadSingleNode(path + "/" + subdir[j] + "/img/")
+				simiValue = ImgMatch.GetSimilarity(ImgListNow, ImgListBefore)
+				print(subdir[i], subdir[j], ":", simiValue)
+				if simiValue > 0.2:
+					coordinates[i + 1] = coordinates[j]
+					currX, currY = coordinates[j][0], coordinates[j][1]
 
-	coordinates.insert(0, [0, 0])
 	print(coordinates)
-	plt.plot([i[0] for i in coordinates], [i[1] for i in coordinates], "*-")
-	plt.show()
+	# plt.plot([i[0] for i in coordinates], [i[1] for i in coordinates], "*-")
+	# plt.show()
 
 
 
 if __name__ == '__main__':
-    surf = cv2.xfeatures2d.SURF_create(300)
-    bf = cv2.BFMatcher_create()
     main()
 

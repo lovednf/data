@@ -6,6 +6,8 @@ import cv2
 import time
 import os
 
+surf = cv2.xfeatures2d.SURF_create(300)
+bf = cv2.BFMatcher_create()
 
 # 匹配点去重，取最优
 def Remove_duplication(TheList):
