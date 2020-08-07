@@ -22,28 +22,31 @@ def rotaMat(coordX, coordY, theta, distance):
 		[np.sin(theta*np.pi/180), np.cos(theta*np.pi/180)]])
 	coord = np.array([0, -1]) #define the initial positive direction
 	return np.array(np.dot(M, coord)*distance + np.array([coordX, coordY])).flatten()
-print("test rotaMat", rotaMat(0, 0, 0, 1), "\n")
+print("test rotaMat", rotaMat(1, 1, -90, 5), "\n")
 
 
 forward, backward, left, right = 0, 180, 90, -90
 currX, currY, currTheta = 0, 0, 0
 distance = list(map(float, [i[2].strip("\n") for i in data]))
+distance.append(0)
 coordinates = []
 for i in range(26):
 	if data[i][1] == "forward\n":
-		coord = rotaMat(currX, currY, currTheta, distance[i])
+		coord = rotaMat(currX, currY, currTheta, distance[i + 1])
 	elif data[i][1] == "backward\n":
 		currTheta += backward
-		coord = rotaMat(currX, currY, currTheta, distance[i])
+		coord = rotaMat(currX, currY, currTheta, distance[i + 1])
 	elif data[i][1] == "left\n":
 		currTheta += left
-		coord = rotaMat(currX, currY, currTheta, distance[i])
+		coord = rotaMat(currX, currY, currTheta, distance[i + 1])
 	elif data[i][1] == "right\n":
 		currTheta += right
-		coord = rotaMat(currX, currY, currTheta, distance[i])
+		coord = rotaMat(currX, currY, currTheta, distance[i + 1])
 	currX, currY = coord[0], coord[1]
 	coordinates.append([currX, currY])
+coordinates.insert(0, [0, 0])
 print(coordinates)
+
 
 plt.plot([i[0] for i in coordinates], [i[1] for i in coordinates], "*-")
 plt.show()
